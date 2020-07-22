@@ -1,8 +1,3 @@
---====================================================================================
--- #Author: Jonathan D @ Gannon
---====================================================================================
- 
--- Configuration
 local KeyToucheCloseEvent = {
   { code = 172, event = 'ArrowUp' },
   { code = 173, event = 'ArrowDown' },
@@ -27,21 +22,12 @@ local hasFocus = false
 local PhoneInCall = {}
 local currentPlaySound = false
 local soundDistanceMax = 8.0
---====================================================================================
---  Check si le joueurs poséde un téléphone
---  Callback true or false
---====================================================================================
 function hasPhone (cb)
   cb(true)
 end
---====================================================================================
---  Que faire si le joueurs veut ouvrir sont téléphone n'est qu'il en a pas ?
---====================================================================================
 function ShowNoPhoneWarning ()
 end
---====================================================================================
---  
---====================================================================================
+
 Citizen.CreateThread(function()
   while true do
     Citizen.Wait(0)
@@ -78,17 +64,12 @@ Citizen.CreateThread(function()
     end
   end
 end)
---====================================================================================
---  Active ou Deactive une application (appName => config.json)
---====================================================================================
 RegisterNetEvent('gcPhone:setEnableApp')
 AddEventHandler('gcPhone:setEnableApp', function(appName, enable)
   SendNUIMessage({event = 'setEnableApp', appName = appName, enable = enable })
 end)
 
---====================================================================================
---  Gestion des appels fixe
---====================================================================================
+
 function startFixeCall (fixeNumber)
   local number = ''
   DisplayOnscreenKeyboard(1, "FMMC_MPM_NA", "", "", "", "", "", 10)
@@ -115,10 +96,6 @@ RegisterNetEvent("gcPhone:notifyFixePhoneChange")
 AddEventHandler("gcPhone:notifyFixePhoneChange", function(_PhoneInCall)
   PhoneInCall = _PhoneInCall
 end)
-
---[[
-  Affiche les imformations quant le joueurs est proche d'un fixe
---]]
 
 Citizen.CreateThread(function ()
   local mod = 0
@@ -201,9 +178,6 @@ AddEventHandler("gcPhone:forceOpenPhone", function(_myPhoneNumber)
   end
 end)
  
---====================================================================================
---  Events
---====================================================================================
 RegisterNetEvent("gcPhone:myPhoneNumber")
 AddEventHandler("gcPhone:myPhoneNumber", function(_myPhoneNumber)
   myPhoneNumber = _myPhoneNumber
@@ -254,9 +228,6 @@ AddEventHandler("gcPhone:receiveMessage", function(message)
   end
 end)
 
---====================================================================================
---  Function client | Contacts
---====================================================================================
 function addContact(display, num) 
     TriggerServerEvent('gcPhone:addContact', display, num)
 end
@@ -264,9 +235,6 @@ end
 function deleteContact(num) 
     TriggerServerEvent('gcPhone:deleteContact', num)
 end
---====================================================================================
---  Function client | Messages
---====================================================================================
 function sendMessage(num, message)
   TriggerServerEvent('gcPhone:sendMessage', num, message)
 end
@@ -309,9 +277,7 @@ end
 
 
 
---====================================================================================
---  Function client | Appels
---====================================================================================
+
 local aminCall = false
 local inCall = false
 
@@ -387,9 +353,6 @@ function appelsDeleteAllHistorique ()
 end
   
 
---====================================================================================
---  Event NUI - Appels
---====================================================================================
 
 RegisterNUICallback('startCall', function (data, cb)
   startCall(data.numero, data.rtcOffer, data.extraData)
@@ -449,9 +412,7 @@ RegisterNetEvent('gcphone:autoAcceptCall')
 AddEventHandler('gcphone:autoAcceptCall', function(infoCall)
   SendNUIMessage({ event = "autoAcceptCall", infoCall = infoCall})
 end)
---====================================================================================
---  Gestion des evenements NUI
---==================================================================================== 
+
 RegisterNUICallback('log', function(data, cb)
   print(data)
   cb()
@@ -476,8 +437,6 @@ RegisterNUICallback('reponseText', function(data, cb)
   end
   cb(json.encode({text = text}))
 end)
---====================================================================================
---  Event - Messages
 --====================================================================================
 RegisterNUICallback('getMessages', function(data, cb)
   cb(json.encode(messages))
@@ -505,8 +464,6 @@ RegisterNUICallback('setReadMessageNumber', function (data, cb)
   setReadMessageNumber(data.number)
   cb()
 end)
---====================================================================================
---  Event - Contacts
 --====================================================================================
 RegisterNUICallback('addContact', function(data, cb) 
   TriggerServerEvent('gcPhone:addContact', data.display, data.phoneNumber)
@@ -576,8 +533,6 @@ end)
 
 
 ----------------------------------
----------- GESTION APPEL ---------
-----------------------------------
 RegisterNUICallback('appelsDeleteHistorique', function (data, cb)
   appelsDeleteHistorique(data.numero)
   cb()
@@ -588,8 +543,6 @@ RegisterNUICallback('appelsDeleteAllHistorique', function (data, cb)
 end)
 
 
-----------------------------------
----------- GESTION VIA WEBRTC ----
 ----------------------------------
 AddEventHandler('onClientResourceStart', function(res)
   DoScreenFadeIn(300)
